@@ -120,8 +120,13 @@ class Timescale:  # pylint: disable=R0902
         logging.debug("couldnt figure out which git repo your locustfile is in")
 
     def on_test_start(self, environment: locust.env.Environment):
-        # set _testplan from here, because when running distributed, override_test_plan is not yet available at init time
-        self._testplan = self.env.parsed_options.override_plan_name or self.env.parsed_options.locustfile
+        if self.env.parsed_options.override_plan_name_user_classes:
+            user_classes = [u.__name__ for u in environment.user_classes]
+            self._testplan = user_classes
+        else:
+            # set _testplan from here, because when running distributed, override_test_plan is not yet available at init time
+            self._testplan = self.env.parsed_options.override_plan_name or self.env.parsed_options.locustfile
+        
         try:
             self.dbconn = self._dbconn()
         except psycopg2.OperationalError as e:

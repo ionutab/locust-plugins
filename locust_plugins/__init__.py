@@ -123,6 +123,13 @@ def add_arguments(parser: LocustArgumentParser):
         env_var="LOCUST_OVERRIDE_PLAN_NAME",
         default="",
     )
+    run_info.add_argument(
+        "--override-plan-name-user-classes",
+        type=bool,
+        help="Override test plan name in Timescale with the UserClasses selected, default is to use locustfile file name",
+        env_var="LOCUST_OVERRIDE_PLAN_NAME_USER_CLASSES",
+        default="",
+    )
     other = parser.add_argument_group(
         "locust-plugins - Extras",
     )
