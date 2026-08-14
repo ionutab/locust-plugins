@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 from locust.exception import CatchResponseError  # need to do this first to make sure monkey patching is done
+from locust.runners import MasterRunner, LocalRunner
 import json
 import locust.env
 import gevent
@@ -120,7 +121,7 @@ class Timescale:  # pylint: disable=R0902
         logging.debug("couldnt figure out which git repo your locustfile is in")
 
     def on_test_start(self, environment: locust.env.Environment):
-        if self.env.parsed_options.override_plan_name_user_classes:
+        if if isinstance(environment.runner, (MasterRunner, LocalRunner)) and self.env.parsed_options.override_plan_name_user_classes:
             user_classes = [u.__name__ for u in environment.user_classes]
             self._testplan = user_classes
         else:
